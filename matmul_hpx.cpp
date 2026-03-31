@@ -1,8 +1,9 @@
 // HPX parallel matrix multiplication demo
 // Author: Rahul Surya <s2894842@ed.ac.uk>
 
-#include <hpx/hpx_main.hpp>
+#include <hpx/init.hpp>
 #include <hpx/algorithm.hpp>
+#include <hpx/parallel/algorithms/for_loop.hpp>
 #include <hpx/execution.hpp>
 
 #include <chrono>
@@ -34,7 +35,7 @@ static void matmul_parallel(
     std::vector<double>& C,
     std::size_t N)
 {
-    hpx::for_loop(hpx::execution::par, std::size_t(0), N,
+    hpx::experimental::for_loop(hpx::execution::par, std::size_t(0), N,
         [&](std::size_t i) {
             for (std::size_t j = 0; j < N; ++j) {
                 double sum = 0.0;
@@ -84,4 +85,9 @@ int hpx_main(int argc, char* argv[])
     std::cout << "Max diff       : " << std::abs(checksum(C_serial) - checksum(C_par)) << "\n";
 
     return hpx::finalize();
+}
+
+int main(int argc, char* argv[])
+{
+    return hpx::init(argc, argv);
 }
